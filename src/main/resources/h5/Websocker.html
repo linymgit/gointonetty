@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocker text</title>
+</head>
+<body>
+
+    <div>
+        <textarea id="clientTest"></textarea>
+        <button id="clientSend" onclick="send()">发送</button>
+    </div>
+
+    <div>
+        <textarea id="severTest"></textarea>
+    </div>
+
+
+<script type="text/javascript">
+    var websocker;
+    if(window.websocker == null || window.websocker ==undefined  ){
+        websocker = new WebSocket("ws://localhost:8055/ws");
+
+        websocker.onmessage = function (ev) {
+            alert("服务器发来了信息："+ev.data);
+            var test = document.getElementById("severTest");
+            test.value = ev.data;
+        }
+
+        websocker.onopen = function (ev) {
+            alert("打开服务器！！！");
+        }
+
+        websocker.onclose = function (ev) {
+            alert("关闭服务器！！！");
+        }
+    }else{
+        alert("抱歉！你的浏览器不支持WebSocker");
+    }
+
+    function send() {
+        if(websocker != null){
+            if(websocker.readyState == WebSocket.OPEN){
+                websocker.send(document.getElementById("clientTest").value);
+            }else{
+                alert("连接还没打开！！！")
+            }
+        }else {
+            return ;
+        }
+    }
+
+    function cloes() {
+        if(websocker != null){
+            websocker.close();
+        }
+    }
+</script>
+</body>
+</html>
